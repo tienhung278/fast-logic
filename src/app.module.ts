@@ -2,12 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { TransactionsModule } from './transactions/transactions.module';
+import { RedisModule } from './redis/redis.module';
 
 const dbPortValue = Number.parseInt(process.env.DB_PORT ?? '5432', 10);
 const dbPort = Number.isNaN(dbPortValue) ? 5432 : dbPortValue;
 
 @Module({
   imports: [
+    RedisModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST ?? 'localhost',

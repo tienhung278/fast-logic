@@ -11,6 +11,7 @@ This repo implements the core webhook service for processing fuel transactions i
 - Unit and e2e tests
 - GitHub Actions CI pipeline
 - PostgreSQL persistence via TypeORM
+- Redis cache for card/organization lookups
 
 ## System Design (Part 1)
 ### Flow Diagram
@@ -155,7 +156,10 @@ The service seeds a single organization with two cards on startup:
 - Amounts are accepted with up to 2 decimal places and stored as integer cents.
 - Daily/monthly resets are based on the transaction timestamp in UTC.
 - PostgreSQL + TypeORM are used with `synchronize` enabled for local development.
+- Transactions are stored for historical tracking and auditing.
+- The service uses a Unit of Work transaction to keep balance, usage, and transaction writes atomic.
 - Concurrency control (e.g., row-level locks) is needed in production to prevent race conditions.
+- The model is designed to be extended with new limit types (weekly, vehicle-level, org aggregate).
 - Redis caching and idempotency keys are recommended for high throughput.
 
 ## Running Locally
@@ -172,6 +176,15 @@ Defaults (can be overridden via environment variables):
 - `DB_PASSWORD=admin`
 - `DB_NAME=fast_logic`
 - `DB_SYNC=true`
+
+### Redis Configuration
+Defaults (can be overridden via environment variables):
+- `REDIS_ENABLED=true`
+- `REDIS_HOST=localhost`
+- `REDIS_PORT=6379`
+- `REDIS_PASSWORD=`
+- `REDIS_DB=0`
+- `REDIS_TTL_SECONDS=300`
 
 ## Tests
 ```bash

@@ -21,6 +21,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       DB_HOST: localhost
       DB_PORT: 5432
@@ -28,6 +37,7 @@ jobs:
       DB_PASSWORD: admin
       DB_NAME: fast_logic
       DB_SYNC: true
+      REDIS_ENABLED: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
