@@ -1,11 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import type Redis from 'ioredis';
 import { REDIS_CLIENT } from './redis.constants';
 
 const DEFAULT_TTL_SECONDS = 300;
 
 @Injectable()
-export class RedisCacheService {
+export class RedisCacheService implements OnModuleDestroy {
   private readonly logger = new Logger(RedisCacheService.name);
   private readonly ttlSeconds: number;
   private isAvailable = true;
@@ -58,6 +58,18 @@ export class RedisCacheService {
       await this.client.del(key);
     } catch (error) {
       this.disableCache(error);
+    }
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    if (!this.client) {
+      return;
+    }
+
+    try {
+      await this.client.quit();
+    } catch {
+      this.client.disconnect();
     }
   }
 
