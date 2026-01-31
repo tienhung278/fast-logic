@@ -3,7 +3,10 @@ import { Card } from './models/card.model';
 import { Organization } from './models/organization.model';
 import type { CardRepository } from './repositories/card-repository.interface';
 import type { OrganizationRepository } from './repositories/organization-repository.interface';
-import { CARD_REPOSITORY, ORGANIZATION_REPOSITORY } from './repositories/repository.tokens';
+import {
+  CARD_REPOSITORY,
+  ORGANIZATION_REPOSITORY,
+} from './repositories/repository.tokens';
 
 @Injectable()
 export class TransactionsSeedService implements OnModuleInit {
@@ -18,7 +21,8 @@ export class TransactionsSeedService implements OnModuleInit {
     const baseDate = new Date('2026-01-01T00:00:00Z');
 
     const organizationId = 'org_acme';
-    const existingOrg = await this.organizationRepository.findById(organizationId);
+    const existingOrg =
+      await this.organizationRepository.findById(organizationId);
 
     if (!existingOrg) {
       const organization = new Organization();
@@ -58,7 +62,9 @@ export class TransactionsSeedService implements OnModuleInit {
     monthlyLimitCents: number;
     baseDate: Date;
   }): Promise<void> {
-    const existingCard = await this.cardRepository.findByCardNumber(params.cardNumber);
+    const existingCard = await this.cardRepository.findByCardNumber(
+      params.cardNumber,
+    );
     if (existingCard) {
       return;
     }

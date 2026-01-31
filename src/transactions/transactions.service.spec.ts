@@ -63,19 +63,18 @@ class MockOrganizationRepository implements OrganizationRepository {
     }
   }
 
-  async findById(
-    id: string,
-    _manager?: EntityManager,
-  ): Promise<Organization | null> {
-    return this.organizations.get(id) ?? null;
+  findById(id: string, manager?: EntityManager): Promise<Organization | null> {
+    void manager;
+    return Promise.resolve(this.organizations.get(id) ?? null);
   }
 
-  async save(
+  save(
     organization: Organization,
-    _manager?: EntityManager,
+    manager?: EntityManager,
   ): Promise<Organization> {
+    void manager;
     this.organizations.set(organization.id, organization);
-    return organization;
+    return Promise.resolve(organization);
   }
 }
 
@@ -88,41 +87,45 @@ class MockCardRepository implements CardRepository {
     }
   }
 
-  async findById(id: string, _manager?: EntityManager): Promise<Card | null> {
+  findById(id: string, manager?: EntityManager): Promise<Card | null> {
+    void manager;
     for (const card of this.cards.values()) {
       if (card.id === id) {
-        return card;
+        return Promise.resolve(card);
       }
     }
-    return null;
+    return Promise.resolve(null);
   }
 
-  async findByCardNumber(
+  findByCardNumber(
     cardNumber: string,
-    _manager?: EntityManager,
+    manager?: EntityManager,
   ): Promise<Card | null> {
-    return this.cards.get(cardNumber) ?? null;
+    void manager;
+    return Promise.resolve(this.cards.get(cardNumber) ?? null);
   }
 
-  async save(card: Card, _manager?: EntityManager): Promise<Card> {
+  save(card: Card, manager?: EntityManager): Promise<Card> {
+    void manager;
     this.cards.set(card.cardNumber, card);
-    return card;
+    return Promise.resolve(card);
   }
 }
 
 class MockTransactionRepository implements TransactionRepository {
   private readonly transactions: Transaction[] = [];
 
-  async create(
+  create(
     transaction: Transaction,
-    _manager?: EntityManager,
+    manager?: EntityManager,
   ): Promise<Transaction> {
+    void manager;
     this.transactions.push(transaction);
-    return transaction;
+    return Promise.resolve(transaction);
   }
 
-  async findAll(): Promise<Transaction[]> {
-    return [...this.transactions];
+  findAll(): Promise<Transaction[]> {
+    return Promise.resolve([...this.transactions]);
   }
 }
 

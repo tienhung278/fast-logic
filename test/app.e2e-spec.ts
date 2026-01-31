@@ -29,7 +29,8 @@ describe('AppController (e2e)', () => {
       .get('/health')
       .expect(200)
       .expect((response) => {
-        expect(response.body.status).toBe('ok');
+        const body = response.body as { status: string };
+        expect(body.status).toBe('ok');
       });
   });
 
@@ -45,8 +46,9 @@ describe('AppController (e2e)', () => {
       })
       .expect(200)
       .expect((response) => {
-        expect(response.body.status).toBe('approved');
-        expect(response.body.code).toBe('APPROVED');
+        const body = response.body as { status: string; code: string };
+        expect(body.status).toBe('approved');
+        expect(body.code).toBe('APPROVED');
       });
   });
 });

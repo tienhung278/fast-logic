@@ -22,7 +22,9 @@ export class TypeOrmOrganizationRepository implements OrganizationRepository {
   ) {}
 
   findById(id: string, manager?: EntityManager): Promise<Organization | null> {
-    const repo = manager ? manager.getRepository(Organization) : this.repository;
+    const repo = manager
+      ? manager.getRepository(Organization)
+      : this.repository;
 
     return this.findWithCache(repo, id);
   }
@@ -31,7 +33,9 @@ export class TypeOrmOrganizationRepository implements OrganizationRepository {
     organization: Organization,
     manager?: EntityManager,
   ): Promise<Organization> {
-    const repo = manager ? manager.getRepository(Organization) : this.repository;
+    const repo = manager
+      ? manager.getRepository(Organization)
+      : this.repository;
 
     return repo.save(organization).then(async (saved) => {
       await this.cache.setJson(
